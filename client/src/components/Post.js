@@ -1,23 +1,33 @@
-export default function Post() {
+import { format } from "date-fns";
+import { Link } from "react-router-dom";
+
+export default function Post({
+  _id,
+  title,
+  summary,
+  content,
+  cover,
+  createdAt,
+  author,
+}) {
   return (
     <div className="post">
       <div className="image">
-        <img
-          src="https://media.gettyimages.com/id/138819859/photo/vintage-porsche-356-speedster.jpg?s=612x612&w=0&k=20&c=MfsegAQyJDH8ld3RaTBDTTWerUxcJuwFdHM6pQNp3ZE="
-          alt=""
-        />
+        <Link to={`/post/${_id}`}>
+          <img src={"http://localhost:3001/" + cover} alt="" />
+        </Link>
       </div>
 
       <div className="texts">
-        <h2>Vintage porsche 356 speedster</h2>
+        <Link to={`/post/${_id}`}>
+          <h2>{title}</h2>
+        </Link>
+
         <p className="info">
-          <span className="author">Konrad Sokolowski</span>
-          <time>2023-01-06 16:45</time>
+          <span className="author">{author.username}</span>
+          <time>{format(new Date(createdAt), "MMM do, yyyy HH:mm")}</time>
         </p>
-        <p className="description">
-          Vintage porsche 356 speedster sports car in silver gray and black red
-          interior.
-        </p>
+        <p className="description">{summary}</p>
       </div>
     </div>
   );

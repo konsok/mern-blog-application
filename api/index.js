@@ -10,11 +10,14 @@ const multer = require("multer");
 const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
 
+//szyfrowanie
+
 const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
 const secret = "asdfe45we45w345wegw345werjktjwertkj";
 
 // Podlaczanie do bazy danych
+
 const uri =
   "mongodb+srv://konsok:Qsefthuko123!@atlascluster.dq4ajlx.mongodb.net/?retryWrites=true&w=majority";
 
@@ -29,13 +32,12 @@ try {
   console.log("Error connecting to MongoDB", error);
 }
 
-// mongoose.set("strictQuery", false);
-// mongoose.connect(uri);
+// app.use
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
-
 app.use(cookieParser());
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // tworzenie uzytkownika
 
@@ -82,20 +84,13 @@ app.get("/profile", (req, res) => {
   });
 });
 
-// res.json(req.cookies);
-
-// const authHeader = req.headers["authorization"];
-// const token = authHeader && authHeader.split(" ")[1];
-// if (token == null) return res.sendStatus(401);
-
-// jwt.verify(token, secret, (err, user) => {
-//   if (err) return res.sendStatus(403);
-//   res.json(user);
-// });
+// wylogowywanie
 
 app.post("/logout", (req, res) => {
   res.cookie("token", "").json("logged out");
 });
+
+// tworzenie posta
 
 app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const { originalname, path } = req.file;
@@ -104,19 +99,41 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const newPath = path + "." + extension;
   fs.renameSync(path, newPath);
 
-  const { title, summary, content } = req.body;
-  const postDoc = await Post.create({
-    title,
-    summary,
-    content,
-    cover: newPath,
+  //po otrzymaniu tokena mozemy odczytac id uzytkownika
+
+  const { token } = req.cookies;
+  jwt.verify(token, secret, {}, async (err, info) => {
+    if (err) throw err;
+    const { title, summary, content } = req.body;
+    const postDoc = await Post.create({
+      title,
+      summary,
+      content,
+      cover: newPath,
+      author: info.id,
+    });
+    res.json(postDoc);
   });
-  res.json(postDoc);
 });
 
+// pobieranie postow
+
 app.get("/post", async (req, res) => {
-  const posts = await Post.find();
-  res.json(posts);
+  res.json(
+    await Post.find()
+      .populate("author", ["username"])
+      .sort({ createdAt: -1 })
+      .limit(10)
+  );
+});
+
+// pobieranie pojedynczego posta
+
+app.get("/post/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const postDoc = await Post.findById(id).populate("author", ["username"]);
+  res.json(postDoc);
 });
 
 app.listen(3001, () => {
