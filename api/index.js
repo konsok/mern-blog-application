@@ -1,190 +1,89 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const User = require("./models/User");
-const Post = require("./models/Post");
 const app = express();
-const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const uploadMiddleware = multer({ dest: "uploads/" });
+
+const {
+  registerController,
+  loginController,
+  profileController,
+  profilePageController,
+  changePasswordController,
+  deleteUserController,
+  logoutController,
+} = require("./controllers/userController");
+const {
+  createPostContr,
+  updatePostContr,
+  deletePostContr,
+  getPostsContr,
+  getPostContr,
+} = require("./controllers/postController");
+const logger = require("./configs/logsConfig");
+const https = require("https");
 const fs = require("fs");
-
-//szyfrowanie
-
-const bcrypt = require("bcryptjs");
-const salt = bcrypt.genSaltSync(10);
-const secret = "asdfe45we45w345wegw345werjktjwertkj";
-
 // Podlaczanie do bazy danych
 
-const uri =
-  "mongodb+srv://konsok:Qsefthuko123!@atlascluster.dq4ajlx.mongodb.net/?retryWrites=true&w=majority";
+const connectDB = async () => {
+  try {
+    const uri =
+      "mongodb+srv://konsok:PASSWORD@atlascluster.dq4ajlx.mongodb.net/?retryWrites=true&w=majority";
 
-try {
-  mongoose.set("strictQuery", false);
-  mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  console.log("Connected to MongoDB");
-} catch (error) {
-  console.log("Error connecting to MongoDB", error);
-}
+    mongoose.set("strictQuery", false);
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    // console.log("Connected to MongoDB");
+    logger.info("Connected to MongoDB");
+  } catch (error) {
+    logger.error("Error connecting to MongoDB", error);
+  }
+};
+
+connectDB();
+const key = fs.readFileSync("sciezkadoklucza");
+const cert = fs.readFileSync("/sciezkadocertyfikatu");
+
+const credentials = { key, cert };
+
+const server = https.createServer(credentials, app);
 
 // app.use
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: "https://localhost:3000" }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // tworzenie uzytkownika
-
-app.post("/register", async (req, res) => {
-  const salt = await bcrypt.genSaltSync(10);
-  const { username, password } = req.body;
-  try {
-    const userDoc = await User.create({
-      username,
-      password: bcrypt.hashSync(password, salt),
-    });
-    res.json(userDoc);
-  } catch (e) {
-    console.log(e);
-    res.status(400).json(e);
-  }
-});
-
-//logowanie
-
-app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  const userDoc = await User.findOne({ username });
-  const passOk = bcrypt.compareSync(password, userDoc.password);
-  if (passOk) {
-    // logged in
-    jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
-      if (err) throw err;
-      res.cookie("token", token).json({
-        id: userDoc._id,
-        username,
-      });
-    });
-  } else {
-    res.status(400).json("wrong credentials");
-  }
-});
-
-app.get("/profile", (req, res) => {
-  const { token } = req.cookies;
-  jwt.verify(token, secret, {}, (err, info) => {
-    if (err) throw err;
-    res.json(info);
-  });
-});
-
+app.post("/register", registerController);
+// logowanie uzytkownika
+app.post("/login", loginController);
+// pobieranie sesji
+app.get("/profile", profileController);
+// pobieranie profilu
+app.get("/profile/:id", profilePageController);
 // wylogowywanie
-
-app.post("/logout", (req, res) => {
-  res.cookie("token", "").json("logged out");
-});
+app.post("/logout", logoutController);
+//usuwanie uzytkownika
+app.delete("/profile/:id", deleteUserController);
+// zmiana hasla
+app.put("/edit-profile/:id", changePasswordController);
 
 // tworzenie posta
-
-app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
-  const { originalname, path } = req.file;
-  const parts = originalname.split(".");
-  const extension = parts[parts.length - 1];
-  const newPath = path + "." + extension;
-  fs.renameSync(path, newPath);
-
-  //po otrzymaniu tokena mozemy odczytac id uzytkownika
-
-  const { token } = req.cookies;
-  jwt.verify(token, secret, {}, async (err, info) => {
-    if (err) throw err;
-    const { title, summary, content } = req.body;
-    const postDoc = await Post.create({
-      title,
-      summary,
-      content,
-      cover: newPath,
-      author: info.id,
-    });
-    res.json(postDoc);
-  });
-});
-
+app.post("/post", uploadMiddleware.single("file"), createPostContr);
 // edycja posta
-
-app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
-  let newPath = null;
-  if (req.file) {
-    const { originalname, path } = req.file;
-    const parts = originalname.split(".");
-    const ext = parts[parts.length - 1];
-    newPath = path + "." + ext;
-    fs.renameSync(path, newPath);
-  }
-
-  const { token } = req.cookies;
-  jwt.verify(token, secret, {}, async (err, info) => {
-    if (err) throw err;
-    const { id, title, summary, content } = req.body;
-    const postDoc = await Post.findById(id);
-    const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
-    if (!isAuthor) {
-      return res.status(400).json("you are not the author");
-    }
-    await postDoc.update({
-      title,
-      summary,
-      content,
-      cover: newPath ? newPath : postDoc.cover,
-    });
-
-    res.json(postDoc);
-  });
-});
-
+app.put("/post", uploadMiddleware.single("file"), updatePostContr);
 // usuwanie posta
-
-app.delete("/post/:id", async (req, res) => {
-  const { id } = req.params;
-  const { token } = req.cookies;
-  jwt.verify(token, secret, {}, async (err, info) => {
-    if (err) throw err;
-    const postDoc = await Post.findById(id);
-    const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
-    if (!isAuthor) {
-      return res.status(400).json("you are not the author");
-    }
-    await postDoc.delete();
-    res.json(postDoc);
-  });
-});
-
+app.delete("/post/:id", deletePostContr);
 // pobieranie postow
-
-app.get("/post", async (req, res) => {
-  res.json(
-    await Post.find()
-      .populate("author", ["username"])
-      .sort({ createdAt: -1 })
-      .limit(10)
-  );
-});
-
+app.get("/post", getPostsContr);
 // pobieranie pojedynczego posta
+app.get("/post/:id", getPostContr);
 
-app.get("/post/:id", async (req, res) => {
-  const { id } = req.params;
-
-  const postDoc = await Post.findById(id).populate("author", ["username"]);
-  res.json(postDoc);
-});
-
-app.listen(3001, () => {
-  console.log("Server is running on port 3001");
-});
+server.listen(3001, () => logger.info("Server is running on port 3001"));

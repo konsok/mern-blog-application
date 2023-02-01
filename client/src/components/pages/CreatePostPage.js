@@ -47,16 +47,8 @@ export default function CreatePost() {
     data.set("content", content);
     data.set("file", files[0]);
     ev.preventDefault();
-    // console.log(files);
 
-    // const response = await axios.post(
-    //   "http://localhost:3001/post",
-    //   {
-    //     data: data,
-    //   },
-    //   { withCredentials: true }
-    // );
-    const response = await fetch("http://localhost:3001/post", {
+    const response = await fetch("https://localhost:3001/post", {
       method: "POST",
       body: data,
       credentials: "include",

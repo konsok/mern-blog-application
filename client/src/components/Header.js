@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "./UserContext";
@@ -7,7 +7,7 @@ export default function Header() {
   const { setUserInfo, userInfo } = useContext(UserContext);
 
   useEffect(() => {
-    fetch("http://localhost:3001/profile", {
+    fetch("https://localhost:3001/profile", {
       credentials: "include",
     }).then((response) => {
       response.json().then((userInfo) => {
@@ -17,21 +17,23 @@ export default function Header() {
   }, []);
 
   function logout() {
-    axios.post("http://localhost:3001/logout", {}, { withCredentials: true });
+    axios.post("https://localhost:3001/logout", {}, { withCredentials: true });
     setUserInfo(null);
   }
 
   const username = userInfo?.username;
+  const id = userInfo?.id;
 
   return (
     <header>
       <Link to="/" className="logo">
-        Porsche Blog
+        Blog
       </Link>
       <nav>
         {username && (
           <>
             <Link to="/create">Create new post</Link>
+            <Link to={`/profile/${id}`}>Profile</Link>
             <a onClick={logout}>Logout</a>
           </>
         )}

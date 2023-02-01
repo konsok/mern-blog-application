@@ -1,36 +1,28 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  // async function register(ev) {
-  //   ev.preventDefault();
-  //   const response = await fetch("http://localhost:3001/register", {
-  //     method: "POST",
-  //     body: JSON.stringify({ username, password }),
-  //     headers: { "Content-Type": "application/json" },
-  //   });
-  //   if (response.status === 200) {
-  //     alert("registration successful");
-  //   } else {
-  //     alert("registration failed");
-  //   }
-  // }
-  //   przy uzyciu axios
+  const [redirect, setRedirect] = useState(false);
 
   async function register(ev) {
     ev.preventDefault();
     try {
-      await axios.post("http://localhost:3001/register", {
+      await axios.post("https://localhost:3001/register", {
         username,
         password,
       });
       alert("Successfully registered");
+      setRedirect(true);
     } catch (error) {
       alert("Failed to register");
     }
+  }
+
+  if (redirect) {
+    return <Navigate to={"/login"} />;
   }
 
   return (
