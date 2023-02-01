@@ -4,10 +4,12 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 export default function PostPage() {
   const [postInfo, setPostInfo] = useState(null);
   const { userInfo } = useContext(UserContext);
+  const [redirect, setRedirect] = useState(false);
 
   const { id } = useParams();
   useEffect(() => {
@@ -19,6 +21,18 @@ export default function PostPage() {
 
   if (!postInfo) return null;
 
+  async function deletePost() {
+    const response = await fetch(`http://localhost:3001/post/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (response.ok) {
+      setRedirect(true);
+    }
+  }
+
+  if (redirect) return <Navigate to={`/`} />;
+
   return (
     <div className="post-page">
       <h1>{postInfo.title}</h1>
@@ -29,6 +43,9 @@ export default function PostPage() {
           <Link className="edit-btn" to={`/edit/${postInfo._id}`}>
             Edit
           </Link>
+          <button className="delete-btn" onClick={deletePost}>
+            Delete Post
+          </button>
         </div>
       )}
       <div className="image">

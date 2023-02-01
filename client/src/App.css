@@ -29,6 +29,7 @@ header {
 header a {
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
 }
 
 header a.logo {
@@ -168,12 +169,23 @@ div.post-page div.content p {
 }
 
 div.edit-row {
-  text-align: center;
   margin-bottom: 20px;
+  display: flex;
+  gap: 5px;
+  justify-content: right;
 }
 
 div.post-page a.edit-btn {
   background-color: #222;
+  display: inline-block;
+  text-decoration: none;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 7px;
+}
+
+div.post-page a.delete-btn {
+  background-color: rgb(236, 119, 119);
   display: inline-block;
   text-decoration: none;
   color: #fff;
