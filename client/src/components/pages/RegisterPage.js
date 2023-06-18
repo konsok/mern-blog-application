@@ -10,7 +10,7 @@ export default function RegisterPage() {
   async function register(ev) {
     ev.preventDefault();
     try {
-      await axios.post("https://localhost:3001/register", {
+      await axios.post("http://localhost:3001/register", {
         username,
         password,
       });

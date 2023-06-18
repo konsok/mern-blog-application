@@ -57,27 +57,6 @@ const profilePageController = (req, res) => {
   });
 };
 
-// const changePasswordController = async (req, res) => {
-//   const { id } = req.params;
-//   const { token } = req.cookies;
-//   jwt.verify(token, secret, {}, async (err, info) => {
-//     if (err) res.status(400).json("error");
-
-//     console.log(req.body);
-//     const userDoc = await User.findById(id);
-//     const isOwner = JSON.stringify(userDoc._id) === JSON.stringify(info.id);
-//     if (!isOwner) {
-//       return res.status(400).json("you are not the owner");
-//     }
-
-//     const newPassword = bcrypt.hashSync(info.password, salt);
-//     await userDoc.update({
-//       newPassword,
-//     });
-//     res.json(userDoc);
-//   });
-// };
-
 const changePasswordController = async (req, res) => {
   const { id } = req.params;
   const { token } = req.cookies;

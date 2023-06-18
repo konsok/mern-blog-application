@@ -14,7 +14,7 @@ export default function Post({
     <div className="post">
       <div className="image">
         <Link to={`/post/${_id}`}>
-          <img src={"https://localhost:3001/" + cover} alt="" />
+          <img src={"http://localhost:3001/" + cover} alt="" />
         </Link>
       </div>
 

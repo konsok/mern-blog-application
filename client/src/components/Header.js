@@ -7,7 +7,7 @@ export default function Header() {
   const { setUserInfo, userInfo } = useContext(UserContext);
 
   useEffect(() => {
-    fetch("https://localhost:3001/profile", {
+    fetch("http://localhost:3001/profile", {
       credentials: "include",
     }).then((response) => {
       response.json().then((userInfo) => {
@@ -17,7 +17,7 @@ export default function Header() {
   }, []);
 
   function logout() {
-    axios.post("https://localhost:3001/logout", {}, { withCredentials: true });
+    axios.post("http://localhost:3001/logout", {}, { withCredentials: true });
     setUserInfo(null);
   }
 

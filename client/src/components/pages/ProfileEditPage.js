@@ -12,7 +12,7 @@ export default function ProfileEditPage() {
   const username = userInfo?.username;
 
   useEffect(() => {
-    fetch(`https://localhost:3001/profile/${id}`, {
+    fetch(`http://localhost:3001/profile/${id}`, {
       credentials: "include",
     }).then((response) => {
       response.json().then((userInfo) => {
@@ -29,7 +29,7 @@ export default function ProfileEditPage() {
 
     console.log(data);
 
-    const response = await fetch(`https://localhost:3001/edit-profile/${id}`, {
+    const response = await fetch(`http://localhost:3001/edit-profile/${id}`, {
       method: "PUT",
       body: data,
       credentials: "include",

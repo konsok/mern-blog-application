@@ -94,3 +94,46 @@ Error: querySrv ENOTFOUND _mongodb._tcp.atlascluster.dq4ajl.mongodb.net
 23:47:21.934 INFO  Connected to MongoDB 
 23:52:51.907 INFO  Server is running on port 3001 
 23:52:52.768 INFO  Connected to MongoDB 
+21:37:03.733 INFO  Server is running on port 3001 
+21:37:04.881 ERROR Error connecting to MongoDBbad auth : authentication failed
+{"ok":0,"code":8000,"codeName":"AtlasError","connectionGeneration":0}
+MongoServerError: bad auth : authentication failed
+    at Connection.onMessage (/Users/konrad/Documents/STUDIA/SEMESTR-3/protokolySW/projekt-psw/api/node_modules/mongodb/lib/cmap/connection.js:227:30)
+    at MessageStream.<anonymous> (/Users/konrad/Documents/STUDIA/SEMESTR-3/protokolySW/projekt-psw/api/node_modules/mongodb/lib/cmap/connection.js:60:60)
+    at MessageStream.emit (node:events:513:28)
+    at processIncomingData (/Users/konrad/Documents/STUDIA/SEMESTR-3/protokolySW/projekt-psw/api/node_modules/mongodb/lib/cmap/message_stream.js:125:16)
+    at MessageStream._write (/Users/konrad/Documents/STUDIA/SEMESTR-3/protokolySW/projekt-psw/api/node_modules/mongodb/lib/cmap/message_stream.js:33:9)
+    at writeOrBuffer (node:internal/streams/writable:392:12)
+    at _write (node:internal/streams/writable:333:10)
+    at Writable.write (node:internal/streams/writable:337:10)
+    at TLSSocket.ondata (node:internal/streams/readable:766:22)
+    at TLSSocket.emit (node:events:513:28) 
+21:38:16.917 INFO  Server is running on port 3001 
+21:38:17.588 INFO  Connected to MongoDB 
+21:43:41.920 INFO  Server is running on port 3001 
+21:43:42.604 INFO  Connected to MongoDB 
+21:45:03.371 INFO  Server is running on port 3001 
+21:45:04.034 INFO  Connected to MongoDB 
+21:45:05.942 INFO  Server is running on port 3001 
+21:45:06.504 INFO  Connected to MongoDB 
+21:46:43.391 INFO  Server is running on port 3001 
+21:46:43.947 INFO  Connected to MongoDB 
+21:47:18.034 INFO  Server is running on port 3001 
+21:47:18.603 INFO  Connected to MongoDB 
+21:48:05.313 INFO  Server is running on port 3001 
+21:48:05.954 INFO  Connected to MongoDB 
+21:49:07.231 INFO  Server is running on port 3001 
+21:49:07.764 INFO  Connected to MongoDB 
+21:51:59.898 INFO  logged in{"username":"test2"} 
+21:52:23.068 INFO  logged in{"username":"test"} 
+21:52:35.769 INFO  user: test updated a post 
+21:53:10.840 INFO  logged in{"username":"admin"} 
+21:54:36.089 INFO  logged in{"username":"admin"} 
+21:54:39.181 INFO  user: admin deleted a post 
+21:57:42.728 INFO  Server is running on port 3001 
+21:57:43.444 INFO  Connected to MongoDB 
+21:58:06.629 INFO  Server is running on port 3001 
+21:58:07.222 INFO  Connected to MongoDB 
+22:00:52.651 INFO  Server is running on port 3001 
+22:03:00.868 INFO  Server is running on port 3001 
+22:09:14.568 INFO  logged in{"username":"user2"} 

@@ -14,7 +14,7 @@ export default function PostPage() {
   const { id } = useParams();
   useEffect(() => {
     axios
-      .get(`https://localhost:3001/post/${id}`)
+      .get(`http://localhost:3001/post/${id}`)
       .then((response) => setPostInfo(response.data))
       .catch((error) => console.error(error));
   }, []);
@@ -22,7 +22,7 @@ export default function PostPage() {
   if (!postInfo) return null;
 
   async function deletePost() {
-    const response = await fetch(`https://localhost:3001/post/${id}`, {
+    const response = await fetch(`http://localhost:3001/post/${id}`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -56,7 +56,7 @@ export default function PostPage() {
         </div>
       )}
       <div className="image">
-        <img src={`https://localhost:3001/${postInfo.cover}`} alt="" />
+        <img src={`http://localhost:3001/${postInfo.cover}`} alt="" />
       </div>
       <div className="content">
         <div dangerouslySetInnerHTML={{ __html: postInfo.content }} />

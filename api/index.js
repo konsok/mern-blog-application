@@ -5,6 +5,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const uploadMiddleware = multer({ dest: "uploads/" });
+const server = require("http").createServer(app);
 
 const {
   registerController,
@@ -27,32 +28,37 @@ const https = require("https");
 const fs = require("fs");
 // Podlaczanie do bazy danych
 
-const connectDB = async () => {
-  try {
-    const uri =
-      "mongodb+srv://konsok:PASSWORD@atlascluster.dq4ajlx.mongodb.net/?retryWrites=true&w=majority";
+// const connectDB = async () => {
+//   try {
+//     const uri =
+//       "mongodb+srv://konsok:CdnXn3j57OTKRMde@atlascluster.dq4ajlx.mongodb.net/?retryWrites=true&w=majority";
 
-    mongoose.set("strictQuery", false);
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    // console.log("Connected to MongoDB");
-    logger.info("Connected to MongoDB");
-  } catch (error) {
-    logger.error("Error connecting to MongoDB", error);
-  }
-};
+//     mongoose.set("strictQuery", false);
+//     await mongoose.connect(uri, {
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//     });
+//     // console.log("Connected to MongoDB");
+//     logger.info("Connected to MongoDB");
+//   } catch (error) {
+//     logger.error("Error connecting to MongoDB", error);
+//   }
+// };
 
-connectDB();
-const key = fs.readFileSync("sciezkadoklucza");
-const cert = fs.readFileSync("/sciezkadocertyfikatu");
+// connectDB();
 
-const credentials = { key, cert };
+mongoose.connect(
+  "mongodb+srv://konsok:CdnXn3j57OTKRMde@atlascluster.dq4ajlx.mongodb.net/?retryWrites=true&w=majority"
+);
 
-const server = https.createServer(credentials, app);
+const key = fs.readFileSync("/Users/konrad/klucz.key");
+const cert = fs.readFileSync("/Users/konrad/cert365.crt");
 
-// app.use
+// const credentials = { key, cert };
+
+// const server = https.createServer(app);
+
+app.use;
 
 app.use(cors({ credentials: true, origin: "https://localhost:3000" }));
 app.use(express.json());
@@ -86,4 +92,4 @@ app.get("/post", getPostsContr);
 // pobieranie pojedynczego posta
 app.get("/post/:id", getPostContr);
 
-server.listen(3001, () => logger.info("Server is running on port 3001"));
+app.listen(3001, () => logger.info("Server is running on port 3001"));

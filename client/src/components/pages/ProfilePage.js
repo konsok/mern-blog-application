@@ -11,7 +11,7 @@ export default function ProfilePage() {
   const id = userInfo?.id;
 
   useEffect(() => {
-    fetch(`https://localhost:3001/profile/${id}`, {
+    fetch(`http://localhost:3001/profile/${id}`, {
       credentials: "include",
     }).then((response) => {
       response.json().then((userInfo) => {
@@ -21,7 +21,7 @@ export default function ProfilePage() {
   }, []);
 
   async function deleteUser() {
-    const response = await fetch(`https://localhost:3001/profile/${id}`, {
+    const response = await fetch(`http://localhost:3001/profile/${id}`, {
       method: "DELETE",
       credentials: "include",
     });
