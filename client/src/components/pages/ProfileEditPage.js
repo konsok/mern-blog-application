@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+// import { Link, useParams } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import { Navigate } from "react-router-dom";
 
@@ -9,7 +9,7 @@ export default function ProfileEditPage() {
   const [password, setPassword] = React.useState(userInfo?.password);
 
   const id = userInfo?.id;
-  const username = userInfo?.username;
+  // const username = userInfo?.username;c
 
   useEffect(() => {
     fetch(`http://localhost:3001/profile/${id}`, {

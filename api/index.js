@@ -51,16 +51,18 @@ mongoose.connect(
   "mongodb+srv://konsok:CdnXn3j57OTKRMde@atlascluster.dq4ajlx.mongodb.net/?retryWrites=true&w=majority"
 );
 
-const key = fs.readFileSync("/Users/konrad/klucz.key");
-const cert = fs.readFileSync("/Users/konrad/cert365.crt");
+// const key = fs.readFileSync("/Users/konrad/klucz.key");
+// const cert = fs.readFileSync("/Users/konrad/cert365.crt");
+// const cert = fs.readFileSync("/Users/konrad/cert365.crt");
 
 // const credentials = { key, cert };
 
 // const server = https.createServer(app);
 
+
 app.use;
 
-app.use(cors({ credentials: true, origin: "https://localhost:3000" }));
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

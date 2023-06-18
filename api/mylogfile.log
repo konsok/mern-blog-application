@@ -137,3 +137,6 @@ MongoServerError: bad auth : authentication failed
 22:00:52.651 INFO  Server is running on port 3001 
 22:03:00.868 INFO  Server is running on port 3001 
 22:09:14.568 INFO  logged in{"username":"user2"} 
+23:56:32.250 INFO  Server is running on port 3001 
+00:05:19.629 INFO  Server is running on port 3001 
+00:05:44.740 INFO  logged in{"username":"user2"} 
